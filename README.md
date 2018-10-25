@@ -21,3 +21,6 @@ The scripts located at this site automate installation of ROS (consistent with t
 
 # ros_assignment
 
+This is the assignment code for EECS473 edit by me.
+No copy and referencing allowed.
+
