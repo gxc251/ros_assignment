@@ -214,8 +214,9 @@ int main(int argc, char** argv) {
 
     goal_flange_affine.linear() = R_down; //set the  goal orientation for flange to point down; will not need to change this for now
 
-    //the length between gear and robot
+    //give the offset to push the gear
     float r=0.07;
+    //the estimated radius of the gear plus the robot
     float offsetT=0.06;
     //the target positions
     float TargetX,TargetY;
@@ -223,12 +224,15 @@ int main(int argc, char** argv) {
     cin>>TargetX;
     ROS_INFO("Please input y axis of target");
     cin>>TargetY;
+    //get the gear location
     float GearX=g_perceived_object_pose.pose.position.x;
     float GearY=g_perceived_object_pose.pose.position.y;
     float CalculatedX=GearX;
     float CalculatedY=GearY;
+    //the target of robot
     float NTargetX,NTargetY;
 
+    //calculate the location for robot to go down and final pos of X axis
     if(GearX<TargetX)
     {
       CalculatedX=GearX-r;
@@ -268,7 +272,7 @@ int main(int argc, char** argv) {
     ROS_INFO("done with first trajectory");
     //xxxxxxxxxxxxxxxxxx
 
-    //go to pose to touch top of gear part; same x and y, but lower z value for flange origin
+    //go to pose to next to gear part; same x and y, but lower z value for flange origin
     flange_origin <<CalculatedX, GearY, 0;
     goal_flange_affine.translation() = flange_origin;
     ROS_INFO_STREAM("move to flange origin= " << goal_flange_affine.translation().transpose() << endl);
@@ -293,7 +297,7 @@ int main(int argc, char** argv) {
     ros::Duration(3.0).sleep(); //dwell here to  observe contact
     //xxxxxxxxxxxxxxxxxx
 
-    //push the gear
+    //push the gear in X axis
     flange_origin <<NTargetX, GearY, 0;
     goal_flange_affine.translation() = flange_origin;
     ROS_INFO_STREAM("move to flange origin= " << goal_flange_affine.translation().transpose() << endl);
@@ -318,6 +322,7 @@ int main(int argc, char** argv) {
     ros::Duration(3.0).sleep(); //dwell here to  observe contact
     //xxxxxxxxxxxxxxxxxx
 
+//calculate the location for robot to go down and final pos of Y axis
     if(GearY<NTargetY)
     {
       CalculatedY=GearY-r;
@@ -328,7 +333,7 @@ int main(int argc, char** argv) {
       CalculatedY=GearY+r;
       NTargetY=TargetY+offsetT;
     }
-    //xxxx  use the x and y coordinates of the gear part, but specify a higher z value
+    //xxxx  use TargetX instead of NTargetX because TargetX is the final X positon for gear
     flange_origin << TargetX, CalculatedY, 0.5; //specify coordinates for the desired flange position (origin) with respect to the robot's base frame
     goal_flange_affine.translation() = flange_origin; //make this part of the flange  affine description
     ROS_INFO_STREAM("move to flange origin= " << goal_flange_affine.translation().transpose() << endl);
@@ -381,7 +386,7 @@ int main(int argc, char** argv) {
     ros::Duration(3.0).sleep(); //dwell here to  observe contact
     //xxxxxxxxxxxxxxxxxx
 
-    //push the gear
+    //push the gear in Y axis
     flange_origin <<TargetX, NTargetY, 0;
     goal_flange_affine.translation() = flange_origin;
     ROS_INFO_STREAM("move to flange origin= " << goal_flange_affine.translation().transpose() << endl);
