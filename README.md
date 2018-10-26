@@ -22,5 +22,6 @@ The scripts located at this site automate installation of ROS (consistent with t
 # ros_assignment
 
 This is the assignment code for EECS473 edited by Guo Chen.
-No copy and referencing allowed.
+This code is based on https://github.com/wsnewman/learning_ros_kinetic created by professor Wyatt Newman.
+
 
